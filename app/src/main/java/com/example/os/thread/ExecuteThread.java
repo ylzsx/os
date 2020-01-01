@@ -7,6 +7,7 @@ import com.example.os.bussiness.IOSListener;
 import com.example.os.bussiness.Repository;
 import com.example.os.bussiness.bean.FileContentResponse;
 import com.example.os.bussiness.bean.OperateType;
+import com.example.os.utils.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -127,6 +128,7 @@ public class ExecuteThread extends CustomThread {
             });
         } else {    // 内存不够用，线程进入阻塞队列
             ThreadManager.getInstance().addThreadBlockedQueue(position, thread);
+            ToastUtil.showToast("内存占用过大，请释放内存");
         }
     }
 }

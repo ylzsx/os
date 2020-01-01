@@ -1,10 +1,6 @@
 package com.example.os.bussiness.activity;
 
-import android.app.backup.SharedPreferencesBackupHelper;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.SharedMemory;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -39,6 +35,7 @@ public class LoginActivity extends BaseActivity implements IOSListener.OnIdentif
         if (CacheUtil.getSP().contains(CacheKey.MFDId)) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
+            finish();
         }
 
         mRelativeLogin.setOnClickListener(new View.OnClickListener() {

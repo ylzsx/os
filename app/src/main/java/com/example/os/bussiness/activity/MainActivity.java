@@ -22,6 +22,7 @@ import com.example.os.bussiness.bean.FileDirRequest;
 import com.example.os.bussiness.bean.FileResponse;
 import com.example.os.bussiness.bean.OperateType;
 import com.example.os.common.CacheKey;
+import com.example.os.thread.DataDeleteThread;
 import com.example.os.thread.DataGenerationThread;
 import com.example.os.thread.ExecuteThread;
 import com.example.os.thread.IThreadToUser;
@@ -118,7 +119,10 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
         mFruitAdapter.setItemDeleteFileListener(new FruitAdapter.ItemDeleteFileListener() {
             @Override
             public void onItemDeleteFileListener(int position) {
-
+                DataDeleteThread thread = new DataDeleteThread();
+                thread.start();
+                thread.setIThreadToUser(MainActivity.this);
+                thread.deleteData(mFruitAdapter.getFileList().get(position).getUfdId(), position);
             }
         });
 
@@ -200,9 +204,18 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
      */
     @Override
     public void insertRefresh(FileResponse response) {
-//        mFileList.add(response);
         mFruitAdapter.getFileList().add(response);
         mFruitAdapter.notifyItemInserted(mFruitAdapter.getFileList().size());
+    }
+
+    /**
+     * 删除文件后进行界面刷新
+     * @param position
+     */
+    @Override
+    public void deleteRefresh(int position) {
+        mFruitAdapter.getFileList().remove(position);
+        mFruitAdapter.notifyItemRemoved(position);
     }
 
     @Override

@@ -10,7 +10,7 @@ import com.example.os.bussiness.IOSListener;
 import com.example.os.bussiness.Repository;
 import com.example.os.bussiness.adapter.BitMapAdapter;
 import com.example.os.bussiness.bean.BitMapData;
-import com.example.os.bussiness.util.GridItemDecoration;
+import com.example.os.widget.GridItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;

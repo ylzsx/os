@@ -1,6 +1,5 @@
 package com.example.os.bussiness.activity;
 
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +11,9 @@ import com.example.lib_memory.service.MemoryManager;
 import com.example.os.R;
 import com.example.os.base.BaseActivity;
 import com.example.os.bussiness.adapter.MemoryAdapter;
-import com.example.os.bussiness.util.GridItemDecoration;
+import com.example.os.widget.GridItemDecoration;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MemoryInfoActivity extends BaseActivity {
 

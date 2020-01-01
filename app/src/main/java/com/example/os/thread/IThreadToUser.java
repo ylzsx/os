@@ -21,4 +21,7 @@ public interface IThreadToUser {
 
     // 新建文件进行新建刷新
     void insertRefresh(FileResponse response);
+
+    // 删除完后进行通知界面刷新
+    void deleteRefresh(int position);
 }

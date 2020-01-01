@@ -64,7 +64,14 @@ public interface IOSListener {
         void onCreateFileDir(int ufdId);
     }
 
+    /**
+     * 创建文件
+     */
     public interface ICreateFile extends IOSListener {
         void onCreateFile(int response);
+    }
+
+    public interface IDeleteFile extends IOSListener {
+        void onDeleteFile(int response);
     }
 }

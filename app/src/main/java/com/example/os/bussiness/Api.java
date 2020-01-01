@@ -57,4 +57,7 @@ public interface Api {
 
     @POST("/disk/create_file")
     Call<ApiResponse<Integer>> createFile(@Body FileDirRequest request);
+
+    @GET("/disk/delete_file")
+    Call<ApiResponse<Integer>> deleteFile(@Query("ufdId") int ufdId);
 }

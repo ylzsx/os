@@ -150,11 +150,25 @@ public class Repository {
         });
     }
 
+    /**
+     * 创建文件
+     * @param dirRequest
+     * @param listener
+     */
     public void createFile(FileDirRequest dirRequest, final IOSListener.ICreateFile listener) {
         mApi.createFile(dirRequest).enqueue(new ResponseCallBack<Integer>() {
             @Override
             protected void onDataResponse(Call<ApiResponse<Integer>> call, ApiResponse<Integer> responseData) {
                 listener.onCreateFile(responseData.getData());
+            }
+        });
+    }
+
+    public void deleteFile(int ufdId, final IOSListener.IDeleteFile listener) {
+        mApi.deleteFile(ufdId).enqueue(new ResponseCallBack<Integer>() {
+            @Override
+            protected void onDataResponse(Call<ApiResponse<Integer>> call, ApiResponse<Integer> responseData) {
+                listener.onDeleteFile(responseData.getData());
             }
         });
     }
