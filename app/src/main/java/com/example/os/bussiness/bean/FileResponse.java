@@ -24,10 +24,13 @@ public class FileResponse {
     private String fileName;
     private int fileLength;
     private int isOpenFlag;
-    private Integer mMemoryBlock[];
+    private Integer[] mMemoryBlock;
 
     public FileResponse() {
         mMemoryBlock = new Integer[MemoryConstants.MEMORY_BLOCK_SIZE];
+//        for (int i = 0; i < MemoryConstants.MEMORY_BLOCK_SIZE; i++) {
+//
+//        }
     }
 
     public int getUfdId() {

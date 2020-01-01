@@ -2,6 +2,7 @@ package com.example.os.thread;
 
 import com.example.lib_memory.service.MemoryManager;
 import com.example.lib_thread.bean.CustomThread;
+import com.example.lib_thread.service.ThreadManager;
 import com.example.os.bussiness.IOSListener;
 import com.example.os.bussiness.Repository;
 
@@ -17,6 +18,12 @@ public class ExecuteThread extends CustomThread {
 
     // 为展示LRU置换过程，设置的一个缓存区
     private ArrayList<String> buffer = new ArrayList<>();
+
+    private IThreadToUser mThreadToUser;
+
+    public void setThreadToUser(IThreadToUser threadToUser) {
+        mThreadToUser = threadToUser;
+    }
 
     public int readDisk(int ufdId) {
         //  int page
@@ -34,34 +41,33 @@ public class ExecuteThread extends CustomThread {
     }
 
     /**
+     * 打开文件
      * 1. 查询内存是否够用
      * 2. 内存够用则分配内存，线程进入执行队列；否则线程进入阻塞队列
      * @param ufdId
+     * @param position recyclerView item的位置
      */
-    public void openFile(int ufdId) {
+    public void openFile(int ufdId, int position) {
         final int threadId = this.threadId;
+        final CustomThread thread = this;
         final ArrayList<Integer> memoryBlocks = MemoryManager.getInstance().malloc(threadId);
-        if (memoryBlocks != null && memoryBlocks.size() != 0) {
+        if (memoryBlocks != null && memoryBlocks.size() != 0) {     // 内存够用
             Repository.getInstance().openFile(ufdId, new IOSListener.IOpenFileListener() {
                 @Override
                 public void onOpenFileListener(int response) {
-                    // 进程进入执行队列
-                    // 返回当前进程占用的内存块号
+                    // 线程进入执行队列
+                    ThreadManager.getInstance().addThreadRunningQueue(position, thread);
+                    // 返回当前线程占用的内存块号
+                    mThreadToUser.getMemoryBlocks(memoryBlocks);
                 }
-
                 @Override
                 public void onError(Throwable t) {
                     // 文件打开失败，释放内存
                     MemoryManager.getInstance().free(threadId, memoryBlocks);
                 }
             });
-            return;
-        } else {
-            // 进程进入阻塞队列
+        } else {    // 内存不够用，线程进入阻塞队列
+            ThreadManager.getInstance().addThreadBlockedQueue(position, thread);
         }
-
-
-//        return -1;
     }
-
 }

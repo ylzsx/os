@@ -15,6 +15,7 @@ import com.example.lib_memory.service.MemoryManager;
 import com.example.os.R;
 import com.example.os.bussiness.bean.FileResponse;
 
+import java.util.Collection;
 import java.util.List;
 
 import butterknife.BindView;
@@ -58,37 +59,48 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
 
         // 得到占用的内存块
         Integer[] block = file.getMemoryBlock();
-        // 得到现在的内存情况
-        MemoryBlock[] memory = MemoryManager.getInstance().getMemory();
+        if (block[0] != null) {
+            // 得到现在的内存情况
+            MemoryBlock[] memory = MemoryManager.getInstance().getMemory();
 
-        viewHolder.mTxtMemory1Block.setText(block[0] + "");
-        if (memory[block[0]].isOccupied()) {
-            viewHolder.mTxtMemory1Content.setText(memory[block[0]].getContent() + "");
-            viewHolder.mTxtMemory1Time.setText(memory[block[0]].getAccessTime() + "");
-        }
+            viewHolder.mTxtMemory1Block.setText(block[0] + "");
+            if (memory[block[0]].isOccupied()) {
+                viewHolder.mTxtMemory1Content.setText(memory[block[0]].getContent() + "");
+                viewHolder.mTxtMemory1Time.setText(memory[block[0]].getAccessTime() + "");
+            }
 
-        viewHolder.mTxtMemory2Block.setText(block[1] + "");
-        if (memory[block[1]].isOccupied()) {
-            viewHolder.mTxtMemory2Content.setText(memory[block[1]].getContent() + "");
-            viewHolder.mTxtMemory2Time.setText(memory[block[1]].getAccessTime() + "");
-        }
+            viewHolder.mTxtMemory2Block.setText(block[1] + "");
+            if (memory[block[1]].isOccupied()) {
+                viewHolder.mTxtMemory2Content.setText(memory[block[1]].getContent() + "");
+                viewHolder.mTxtMemory2Time.setText(memory[block[1]].getAccessTime() + "");
+            }
 
-        viewHolder.mTxtMemory3Block.setText(block[2] + "");
-        if (memory[block[2]].isOccupied()) {
-            viewHolder.mTxtMemory3Content.setText(memory[block[2]].getContent() + "");
-            viewHolder.mTxtMemory3Time.setText(memory[block[2]].getAccessTime() + "");
-        }
+            viewHolder.mTxtMemory3Block.setText(block[2] + "");
+            if (memory[block[2]].isOccupied()) {
+                viewHolder.mTxtMemory3Content.setText(memory[block[2]].getContent() + "");
+                viewHolder.mTxtMemory3Time.setText(memory[block[2]].getAccessTime() + "");
+            }
 
-        viewHolder.mTxtMemory4Block.setText(block[3] + "");
-        if (memory[block[3]].isOccupied()) {
-            viewHolder.mTxtMemory4Content.setText(memory[block[3]].getContent() + "");
-            viewHolder.mTxtMemory4Time.setText(memory[block[3]].getAccessTime() + "");
+            viewHolder.mTxtMemory4Block.setText(block[3] + "");
+            if (memory[block[3]].isOccupied()) {
+                viewHolder.mTxtMemory4Content.setText(memory[block[3]].getContent() + "");
+                viewHolder.mTxtMemory4Time.setText(memory[block[3]].getAccessTime() + "");
+            }
         }
     }
 
     @Override
     public int getItemCount() {
         return mFileList.size();
+    }
+
+    public void addItems(Collection<FileResponse> datas) {
+        mFileList.addAll(datas);
+        notifyDataSetChanged();
+    }
+
+    public List<FileResponse> getFileList() {
+        return mFileList;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

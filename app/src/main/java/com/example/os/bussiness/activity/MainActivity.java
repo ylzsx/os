@@ -4,6 +4,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 
 import com.example.os.R;
 import com.example.os.base.BaseActivity;
@@ -12,13 +13,15 @@ import com.example.os.bussiness.Repository;
 import com.example.os.bussiness.adapter.FruitAdapter;
 import com.example.os.bussiness.bean.FileResponse;
 import com.example.os.thread.ExecuteThread;
+import com.example.os.thread.IThreadToUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class MainActivity extends BaseActivity implements IOSListener.IGetAllFileListener {
+public class MainActivity extends BaseActivity implements IOSListener.IGetAllFileListener,
+        IThreadToUser {
 
 
     @BindView(R.id.recyclerView)
@@ -27,12 +30,16 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
     FloatingActionButton mFab;
     @BindView(R.id.nav_view)
     NavigationView mNavView;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
 
     private FruitAdapter mFruitAdapter;
     private List<FileResponse> mFileList = new ArrayList<>();
 
     @Override
     protected void initView() {
+        setSupportActionBar(mToolbar);
+
         mFruitAdapter = new FruitAdapter(this, mFileList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mFruitAdapter);
@@ -50,7 +57,8 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
             public void onItemOpenFileListener(int position) {
                 ExecuteThread thread = new ExecuteThread();
                 thread.start();
-                thread.openFile(mFileList.get(position).getUfdId());
+                thread.openFile(mFileList.get(position).getUfdId(), position);
+                thread.setThreadToUser(MainActivity.this);
             }
         });
     }
@@ -72,7 +80,16 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
 
     @Override
     public void onGetAllFileListener(List<FileResponse> fileList) {
-        mFileList.addAll(fileList);
-        mFruitAdapter.notifyDataSetChanged();
+        mProgressDialog.dismiss();
+        mFruitAdapter.addItems(fileList);
+    }
+
+    /**
+     * 得到被分配的内存块
+     * @param memoryBlocks
+     */
+    @Override
+    public void getMemoryBlocks(ArrayList<Integer> memoryBlocks) {
+
     }
 }
