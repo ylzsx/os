@@ -10,6 +10,7 @@ import com.example.os.bussiness.bean.OperateType;
 import com.example.os.utils.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * @author YangZhaoxin.
@@ -75,6 +76,7 @@ public class ExecuteThread extends CustomThread {
      * 2. 修改文件目录表
      * 3. 通知用户界面
      * 4. 结束当前进程
+     * 5. 唤醒阻塞队列的线程
      * @param ufdId
      * @param position
      */
@@ -89,6 +91,15 @@ public class ExecuteThread extends CustomThread {
                     mThreadToUser.refreshInterface(position, OperateType.CLOSE);
                     // 结束当前进程
                     ThreadManager.getInstance().getThreadRunningQueue().remove(position);
+
+                    // 查询阻塞队列是否有线程，如果有的话便唤醒
+                    Map<Integer, CustomThread> threadBlockedQueue = ThreadManager.getInstance().getThreadBlockedQueue();
+                    for (Integer key : threadBlockedQueue.keySet()) {
+                        ExecuteThread thread = (ExecuteThread) threadBlockedQueue.get(key);
+                        threadBlockedQueue.remove(key);
+                        thread.openFile(ufdId, key);
+                        break;
+                    }
                 }
 
                 @Override
@@ -107,7 +118,7 @@ public class ExecuteThread extends CustomThread {
      * @param position recyclerView item的位置
      */
     public void openFile(int ufdId, int position) {
-        final CustomThread thread = this;
+        final ExecuteThread thread = this;
         final ArrayList<Integer> memoryBlocks = MemoryManager.getInstance().malloc();
         if (memoryBlocks != null && memoryBlocks.size() != 0) {     // 内存够用
             Repository.getInstance().openFile(ufdId, new IOSListener.IOpenFileListener() {

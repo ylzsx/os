@@ -80,6 +80,11 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
                     case R.id.nav_memory:
                         Intent intent2 = new Intent(MainActivity.this, MemoryInfoActivity.class);
                         startActivity(intent2);
+                        break;
+                    case R.id.nav_thread:
+                        Intent intent3 = new Intent(MainActivity.this, ThreadInfoActivity.class);
+                        startActivity(intent3);
+                        break;
                     default:
                         break;
                 }
