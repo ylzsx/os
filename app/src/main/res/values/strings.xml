@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">os</string>
+
+    <string name="access_time_label">T: </string>
+
+    <string name="file_open">打开</string>
+    <string name="file_close">关闭</string>
+</resources>
