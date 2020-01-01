@@ -6,23 +6,26 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import com.example.lib_thread.bean.CustomThread;
+import com.example.lib_thread.service.ThreadManager;
 import com.example.os.R;
 import com.example.os.base.BaseActivity;
 import com.example.os.bussiness.IOSListener;
 import com.example.os.bussiness.Repository;
 import com.example.os.bussiness.adapter.FruitAdapter;
 import com.example.os.bussiness.bean.FileResponse;
+import com.example.os.bussiness.bean.OperateType;
 import com.example.os.thread.ExecuteThread;
 import com.example.os.thread.IThreadToUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity implements IOSListener.IGetAllFileListener,
         IThreadToUser {
-
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -35,6 +38,7 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
 
     private FruitAdapter mFruitAdapter;
     private List<FileResponse> mFileList = new ArrayList<>();
+    private Map<Integer, CustomThread> threadRunningQueue = ThreadManager.getInstance().getThreadRunningQueue();
 
     @Override
     protected void initView() {
@@ -45,6 +49,7 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
         mRecyclerView.setAdapter(mFruitAdapter);
         mProgressDialog.show();
 
+        // 关闭文件
         mFruitAdapter.setItemCloseFileListener(new FruitAdapter.ItemCloseFileListener() {
             @Override
             public void onItemCloseFileListener(int position) {
@@ -52,13 +57,28 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
             }
         });
 
+        // 打开文件
         mFruitAdapter.setItemOpenFileListener(new FruitAdapter.ItemOpenFileListener() {
             @Override
-            public void onItemOpenFileListener(int position) {
-                ExecuteThread thread = new ExecuteThread();
+            public void onItemOpenFileListener(int position, OperateType operateType) {
+                ExecuteThread thread = (ExecuteThread) threadRunningQueue.get(position);
+                if (thread == null) {
+                    thread = new ExecuteThread();
+                }
                 thread.start();
-                thread.openFile(mFileList.get(position).getUfdId(), position);
+                thread.operateFile(mFileList.get(position).getUfdId(), position, operateType);
                 thread.setThreadToUser(MainActivity.this);
+            }
+        });
+
+        // 下一步
+        mFruitAdapter.setItemNextListener(new FruitAdapter.ItemNextListener() {
+            @Override
+            public void onItemNextListener(int position) {
+                ExecuteThread thread = (ExecuteThread) threadRunningQueue.get(position);
+                if (thread != null) {
+                    thread.readDisk(mFileList.get(position).getUfdId(), position);
+                }
             }
         });
     }
@@ -78,6 +98,10 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
         mProgressDialog.dismiss();
     }
 
+    /**
+     * 查找该用户所有文件
+     * @param fileList
+     */
     @Override
     public void onGetAllFileListener(List<FileResponse> fileList) {
         mProgressDialog.dismiss();
@@ -89,7 +113,24 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
      * @param memoryBlocks
      */
     @Override
-    public void getMemoryBlocks(ArrayList<Integer> memoryBlocks) {
+    public void getMemoryBlocks(int position, ArrayList<Integer> memoryBlocks) {
+        mFruitAdapter.getFileList().get(position).setIsOpenFlag(1);
+        mFruitAdapter.getFileList().get(position).setMemoryBlock(memoryBlocks.toArray(new Integer[memoryBlocks.size()]));
+        mFruitAdapter.notifyItemChanged(position);
+    }
 
+    @Override
+    public void refreshInterface(int position, OperateType operateType) {
+        if (operateType == OperateType.CLOSE) {
+            mFruitAdapter.getFileList().get(position).setIsOpenFlag(0);
+            // TODO: 查看阻塞队列是否有进程
+        }
+        mFruitAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // TODO: 退出时关掉所有文件
     }
 }

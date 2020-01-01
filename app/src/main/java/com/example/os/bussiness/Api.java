@@ -1,6 +1,7 @@
 package com.example.os.bussiness;
 
 
+import com.example.os.bussiness.bean.FileContentResponse;
 import com.example.os.bussiness.bean.FileResponse;
 import com.example.os.network.response.ApiResponse;
 
@@ -25,4 +26,12 @@ public interface Api {
 
     @GET("/mfd/open_file")
     Call<ApiResponse<Integer>> openFile(@Query("ufdId") int ufdId);
+
+
+    @GET("/disk/search_file")
+    Call<ApiResponse<ArrayList<FileContentResponse>>> searchFile(@Query("ufdId") int ufdId,
+                                                                 @Query("page") int page);
+
+    @GET("/mfd/close_file")
+    Call<ApiResponse<Integer>> closeFile(@Query("ufdId") int ufdId);
 }

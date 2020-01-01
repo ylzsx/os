@@ -7,13 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.lib_memory.bean.MemoryBlock;
 import com.example.lib_memory.service.MemoryManager;
 import com.example.os.R;
 import com.example.os.bussiness.bean.FileResponse;
+import com.example.os.bussiness.bean.OperateType;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,6 +37,7 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
 
     private ItemOpenFileListener mItemOpenFileListener;
     private ItemCloseFileListener mItemCloseFileListener;
+    private ItemNextListener mItemNextListener;
 
     public FruitAdapter(Context context, List<FileResponse> fileList) {
         this.mContext = context;
@@ -57,34 +61,72 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
         viewHolder.mTxtUfdId.setText(file.getUfdId() + "");
         viewHolder.mTxtFileLength.setText(file.getFileLength() + "");
 
+        if (file.getIsOpenFlag() == 1) {    // 文件处于打开状态
+            viewHolder.mBtnOpenFile.setText("关闭");
+            viewHolder.mLlayoutMemory.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.mBtnOpenFile.setText("打开");
+            viewHolder.mLlayoutMemory.setVisibility(View.GONE);
+        }
+
+        viewHolder.mBtnOpenFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (file.getIsOpenFlag() == 1) {
+                    mItemOpenFileListener.onItemOpenFileListener(i, OperateType.CLOSE);
+                } else {
+                    mItemOpenFileListener.onItemOpenFileListener(i, OperateType.OPEN);
+                }
+            }
+        });
+
+        viewHolder.mBtnDeleteFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItemCloseFileListener.onItemCloseFileListener(i);
+            }
+        });
+
+        viewHolder.mImgNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItemNextListener.onItemNextListener(i);
+            }
+        });
+
+
         // 得到占用的内存块
         Integer[] block = file.getMemoryBlock();
-        if (block[0] != null) {
+        if (block != null && block[0] != null) {
             // 得到现在的内存情况
             MemoryBlock[] memory = MemoryManager.getInstance().getMemory();
 
             viewHolder.mTxtMemory1Block.setText(block[0] + "");
             if (memory[block[0]].isOccupied()) {
                 viewHolder.mTxtMemory1Content.setText(memory[block[0]].getContent() + "");
-                viewHolder.mTxtMemory1Time.setText(memory[block[0]].getAccessTime() + "");
+                viewHolder.mTxtMemory1Time.setText(mContext.getString(R.string.access_time_label)
+                        + memory[block[0]].getAccessTime() + "");
             }
 
             viewHolder.mTxtMemory2Block.setText(block[1] + "");
             if (memory[block[1]].isOccupied()) {
                 viewHolder.mTxtMemory2Content.setText(memory[block[1]].getContent() + "");
-                viewHolder.mTxtMemory2Time.setText(memory[block[1]].getAccessTime() + "");
+                viewHolder.mTxtMemory2Time.setText(mContext.getString(R.string.access_time_label)
+                        + memory[block[1]].getAccessTime() + "");
             }
 
             viewHolder.mTxtMemory3Block.setText(block[2] + "");
             if (memory[block[2]].isOccupied()) {
                 viewHolder.mTxtMemory3Content.setText(memory[block[2]].getContent() + "");
-                viewHolder.mTxtMemory3Time.setText(memory[block[2]].getAccessTime() + "");
+                viewHolder.mTxtMemory3Time.setText(mContext.getString(R.string.access_time_label)
+                        + memory[block[2]].getAccessTime() + "");
             }
 
             viewHolder.mTxtMemory4Block.setText(block[3] + "");
             if (memory[block[3]].isOccupied()) {
                 viewHolder.mTxtMemory4Content.setText(memory[block[3]].getContent() + "");
-                viewHolder.mTxtMemory4Time.setText(memory[block[3]].getAccessTime() + "");
+                viewHolder.mTxtMemory4Time.setText(mContext.getString(R.string.access_time_label)
+                        + memory[block[3]].getAccessTime() + "");
             }
         }
     }
@@ -112,6 +154,8 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
         TextView mTxtFileLength;
         @BindView(R.id.btn_open_file)
         Button mBtnOpenFile;
+        @BindView(R.id.btn_delete_file)
+        Button mBtnDeleteFile;
         @BindView(R.id.txt_memory1_block)
         TextView mTxtMemory1Block;
         @BindView(R.id.txt_memory1_content)
@@ -138,6 +182,16 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
         TextView mTxtMemory4Time;
         @BindView(R.id.llayout_memory)
         LinearLayout mLlayoutMemory;
+        @BindView(R.id.img_next)
+        ImageView mImgNext;
+        @BindView(R.id.rlayout1)
+        RelativeLayout mRLayout1;
+        @BindView(R.id.rlayout2)
+        RelativeLayout mRLayout2;
+        @BindView(R.id.rlayout3)
+        RelativeLayout mRLayout3;
+        @BindView(R.id.rlayout4)
+        RelativeLayout mRLayout4;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -146,7 +200,7 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
     }
 
     public interface ItemOpenFileListener {
-        void onItemOpenFileListener(int position);
+        void onItemOpenFileListener(int position, OperateType operateType);
     }
 
     public void setItemOpenFileListener(ItemOpenFileListener itemOpenFileListener) {
@@ -159,5 +213,13 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
 
     public void setItemCloseFileListener(ItemCloseFileListener itemCloseFileListener) {
         mItemCloseFileListener = itemCloseFileListener;
+    }
+
+    public interface ItemNextListener {
+        void onItemNextListener(int position);
+    }
+
+    public void setItemNextListener(ItemNextListener itemNextListener) {
+        mItemNextListener = itemNextListener;
     }
 }

@@ -1,7 +1,9 @@
 package com.example.os.bussiness;
 
+import com.example.os.bussiness.bean.FileContentResponse;
 import com.example.os.bussiness.bean.FileResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,5 +23,13 @@ public interface IOSListener {
 
     public interface IOpenFileListener extends IOSListener {
         void onOpenFileListener(int response);
+    }
+
+    public interface ISearchFileListener extends IOSListener {
+        void onSearchFileListener(ArrayList<FileContentResponse> fileContentResponses);
+    }
+
+    public interface ICloseFileListener extends IOSListener {
+        void onCloseFileListener(int response);
     }
 }

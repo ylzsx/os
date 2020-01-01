@@ -7,4 +7,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="grey">#EEEEEE</color>
+
+    <color name="occpy_color">#90C652</color>
+    <color name="un_occpy_color">#DADC56</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.os.bussiness;
 
+import com.example.os.bussiness.bean.FileContentResponse;
 import com.example.os.bussiness.bean.FileResponse;
 import com.example.os.network.NetworkFactory;
 import com.example.os.network.response.ApiResponse;
@@ -55,6 +56,24 @@ public class Repository {
             @Override
             protected void onDataResponse(Call<ApiResponse<Integer>> call, ApiResponse<Integer> responseData) {
                 listener.onOpenFileListener(responseData.getData());
+            }
+        });
+    }
+
+    public void searchFile(int ufdId, int page, final IOSListener.ISearchFileListener listener) {
+        mApi.searchFile(ufdId, page).enqueue(new ResponseCallBack<ArrayList<FileContentResponse>>() {
+            @Override
+            protected void onDataResponse(Call<ApiResponse<ArrayList<FileContentResponse>>> call, ApiResponse<ArrayList<FileContentResponse>> responseData) {
+                listener.onSearchFileListener(responseData.getData());
+            }
+        });
+    }
+
+    public void closeFile(int ufdId, final IOSListener.ICloseFileListener listener) {
+        mApi.closeFile(ufdId).enqueue(new ResponseCallBack<Integer>() {
+            @Override
+            protected void onDataResponse(Call<ApiResponse<Integer>> call, ApiResponse<Integer> responseData) {
+                listener.onCloseFileListener(responseData.getData());
             }
         });
     }

@@ -1,5 +1,7 @@
 package com.example.os.thread;
 
+import com.example.os.bussiness.bean.OperateType;
+
 import java.util.ArrayList;
 
 /**
@@ -11,5 +13,8 @@ import java.util.ArrayList;
 public interface IThreadToUser {
 
     // 线程将分配的内存块给用户
-    void getMemoryBlocks(ArrayList<Integer> memoryBlocks);
+    void getMemoryBlocks(int position, ArrayList<Integer> memoryBlocks);
+
+    // LRU替换后通知界面更新
+    void refreshInterface(int position, OperateType operateType);
 }

@@ -1,7 +1,5 @@
 package com.example.os.bussiness.bean;
 
-import com.example.lib_memory.MemoryConstants;
-
 /**
  * @author YangZhaoxin.
  * @since 2020/1/1 10:12.
@@ -23,15 +21,10 @@ public class FileResponse {
     private int userId;
     private String fileName;
     private int fileLength;
-    private int isOpenFlag;
+    private int isOpenFlag = 0;     // 0代表文件关闭
     private Integer[] mMemoryBlock;
 
-    public FileResponse() {
-        mMemoryBlock = new Integer[MemoryConstants.MEMORY_BLOCK_SIZE];
-//        for (int i = 0; i < MemoryConstants.MEMORY_BLOCK_SIZE; i++) {
-//
-//        }
-    }
+    public FileResponse() {}
 
     public int getUfdId() {
         return ufdId;
@@ -77,7 +70,7 @@ public class FileResponse {
         return mMemoryBlock;
     }
 
-//    public void setMemoryBlock(Integer[] memoryBlock) {
-//        mMemoryBlock = memoryBlock;
-//    }
+    public void setMemoryBlock(Integer[] memoryBlock) {
+        mMemoryBlock = memoryBlock;
+    }
 }

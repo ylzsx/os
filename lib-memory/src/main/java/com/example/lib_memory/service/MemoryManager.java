@@ -35,11 +35,10 @@ public class MemoryManager {
 
     /**
      * 内存分配
-     * @param threadId
      * @return  分配到的内存首地址
      * TODO：之后若写进程也需要占用内存，则需要增加一个分配部分内存的方法
      */
-    public ArrayList<Integer> malloc(int threadId) {
+    public ArrayList<Integer> malloc() {
         ArrayList<Integer> result = new ArrayList<>();
         for (int i = 0; i < memory.length; i = i + 4) {
             if (!memory[i].isOccupied()) {
@@ -55,22 +54,17 @@ public class MemoryManager {
 
     /**
      * LRU 模拟内存置换
-     * @param threadId
      * @param memoryBlocks  该线程占用的内存块号
      * @param content   要置换的内容
      */
-    public boolean LRU(int threadId, ArrayList<Integer> memoryBlocks, String content) {
+    public boolean LRU(ArrayList<Integer> memoryBlocks, String content) {
         // 获取到将要被替换的内存块号
         int maxTime = -1;
         int replacedMemoryBlock = -1;
         for (Integer memoryBlock : memoryBlocks) {
-            if (memory[memoryBlock].getThreadId() == threadId) {
-                if (maxTime < memory[memoryBlock].getAccessTime()) {
-                    maxTime = memory[memoryBlock].getAccessTime();
-                    replacedMemoryBlock = memoryBlock;
-                }
-            } else {
-                return false;
+            if (maxTime < memory[memoryBlock].getAccessTime()) {
+                maxTime = memory[memoryBlock].getAccessTime();
+                replacedMemoryBlock = memoryBlock;
             }
         }
 
@@ -88,19 +82,18 @@ public class MemoryManager {
 
     /**
      * 释放线程占用的内存块
-     * @param threadId
      * @param memoryBlocks
      * @return
      */
-    public int free(int threadId, ArrayList<Integer> memoryBlocks) {
+    public int free(ArrayList<Integer> memoryBlocks) {
+        int result = 0;
         for (Integer memoryBlock : memoryBlocks) {
-            if (memory[memoryBlock].getThreadId() == threadId) {
-                memory[memoryBlock].setAccessTime(0);
-                memory[memoryBlock].setOccupied(false);
-                memory[memoryBlock].setThreadId(-1);
-            }
+            memory[memoryBlock].setAccessTime(0);
+            memory[memoryBlock].setOccupied(false);
+            memory[memoryBlock].setContent("");
+            result++;
         }
-        return -1;
+        return result;
     }
 
 

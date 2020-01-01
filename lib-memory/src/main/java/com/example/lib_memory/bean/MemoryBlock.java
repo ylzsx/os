@@ -10,7 +10,7 @@ package com.example.lib_memory.bean;
 public class MemoryBlock {
 
     private int memoryId;
-    private String content;
+    private String content = "";
     private int threadId;
     private int AccessTime;
     private int occupySize;
