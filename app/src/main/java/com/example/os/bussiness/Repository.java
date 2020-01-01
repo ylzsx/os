@@ -3,6 +3,7 @@ package com.example.os.bussiness;
 
 import com.example.os.bussiness.bean.BitMapData;
 import com.example.os.bussiness.bean.FileContentResponse;
+import com.example.os.bussiness.bean.FileDirRequest;
 import com.example.os.bussiness.bean.FileResponse;
 import com.example.os.bussiness.bean.SignUpRequestBody;
 import com.example.os.network.NetworkFactory;
@@ -135,5 +136,27 @@ public class Repository {
         });
     }
 
+    /**
+     * 创建目录项
+     * @param dirRequest
+     * @param listener
+     */
+    public void createFileDir(FileDirRequest dirRequest, final IOSListener.ICreateFileDir listener) {
+        mApi.createFileDir(dirRequest).enqueue(new ResponseCallBack<Integer>() {
+            @Override
+            protected void onDataResponse(Call<ApiResponse<Integer>> call, ApiResponse<Integer> responseData) {
+                listener.onCreateFileDir(responseData.getData());
+            }
+        });
+    }
+
+    public void createFile(FileDirRequest dirRequest, final IOSListener.ICreateFile listener) {
+        mApi.createFile(dirRequest).enqueue(new ResponseCallBack<Integer>() {
+            @Override
+            protected void onDataResponse(Call<ApiResponse<Integer>> call, ApiResponse<Integer> responseData) {
+                listener.onCreateFile(responseData.getData());
+            }
+        });
+    }
 
 }

@@ -29,7 +29,7 @@ public class ExecuteThread extends CustomThread {
     }
 
     public void readDisk(int ufdId, int position) {
-
+        final ExecuteThread thread = this;
         ArrayList<Integer> memoryBlocks = this.memoryBlocks;
         // 1. 查看缓存区是否有
         if (!buffer.isEmpty()) {
@@ -48,6 +48,7 @@ public class ExecuteThread extends CustomThread {
                     page++;
                     MemoryManager.getInstance().LRU(memoryBlocks, buffer.get(0));
                     buffer.remove(0);
+                    thread.stop();
                     mThreadToUser.refreshInterface(position, OperateType.OPEN);
                 }
 

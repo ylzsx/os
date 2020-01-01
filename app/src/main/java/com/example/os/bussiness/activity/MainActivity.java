@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.lib_thread.bean.CustomThread;
 import com.example.lib_thread.service.ThreadManager;
@@ -17,12 +18,15 @@ import com.example.os.base.BaseActivity;
 import com.example.os.bussiness.IOSListener;
 import com.example.os.bussiness.Repository;
 import com.example.os.bussiness.adapter.FruitAdapter;
+import com.example.os.bussiness.bean.FileDirRequest;
 import com.example.os.bussiness.bean.FileResponse;
 import com.example.os.bussiness.bean.OperateType;
 import com.example.os.common.CacheKey;
+import com.example.os.thread.DataGenerationThread;
 import com.example.os.thread.ExecuteThread;
 import com.example.os.thread.IThreadToUser;
 import com.example.os.utils.CacheUtil;
+import com.example.os.widget.CustomDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +83,34 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
             }
         });
 
-        // 关闭文件
+        // 点击创建文件：启动文件创建线程
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomDialog customDialog = new CustomDialog(MainActivity.this);
+
+                customDialog.setOnClickBottomListener(new CustomDialog.ClickBottomListener() {
+                    @Override
+                    public void onClickBottomListener(String fileName, String content) {
+                        DataGenerationThread thread = new DataGenerationThread();
+                        thread.start();
+                        int userId = CacheUtil.getSP().getInt(CacheKey.MFDId, 1);
+                        FileDirRequest fileDirRequest = new FileDirRequest();
+                        fileDirRequest.setUserId(userId);
+                        fileDirRequest.setContent(content);
+                        fileDirRequest.setFileName(fileName);
+                        fileDirRequest.setFileLength((int) Math.ceil(content.length()/4.0));
+
+                        thread.setIThreadToUser(MainActivity.this);
+                        thread.generateData(fileDirRequest);
+                        customDialog.dismiss();
+                    }
+                });
+                customDialog.show();
+            }
+        });
+
+        // 删除文件
         mFruitAdapter.setItemDeleteFileListener(new FruitAdapter.ItemDeleteFileListener() {
             @Override
             public void onItemDeleteFileListener(int position) {
@@ -87,16 +118,16 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
             }
         });
 
-        // 打开文件
+        // 打开（关闭）文件
         mFruitAdapter.setItemOpenFileListener(new FruitAdapter.ItemOpenFileListener() {
             @Override
             public void onItemOpenFileListener(int position, OperateType operateType) {
                 ExecuteThread thread = (ExecuteThread) threadRunningQueue.get(position);
                 if (thread == null) {
                     thread = new ExecuteThread();
+                    thread.start();
                 }
-                thread.start();
-                thread.operateFile(mFileList.get(position).getUfdId(), position, operateType);
+                thread.operateFile(mFruitAdapter.getFileList().get(position).getUfdId(), position, operateType);
                 thread.setThreadToUser(MainActivity.this);
             }
         });
@@ -107,7 +138,7 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
             public void onItemNextListener(int position) {
                 ExecuteThread thread = (ExecuteThread) threadRunningQueue.get(position);
                 if (thread != null) {
-                    thread.readDisk(mFileList.get(position).getUfdId(), position);
+                    thread.readDisk(mFruitAdapter.getFileList().get(position).getUfdId(), position);
                 }
             }
         });
@@ -159,9 +190,26 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
         mFruitAdapter.notifyItemChanged(position);
     }
 
+    /**
+     * 新建文件后进行局部刷新
+     * @param response
+     */
+    @Override
+    public void insertRefresh(FileResponse response) {
+//        mFileList.add(response);
+        mFruitAdapter.getFileList().add(response);
+        mFruitAdapter.notifyItemInserted(mFruitAdapter.getFileList().size());
+    }
+
     @Override
     protected void onDestroy() {
+        // 退出时关掉所有文件
+        Map<Integer, CustomThread> threadRunningQueue = ThreadManager.getInstance().getThreadRunningQueue();
+        for (Integer position : threadRunningQueue.keySet()) {
+            ExecuteThread thread = (ExecuteThread) threadRunningQueue.get(position);
+            thread.operateFile(mFruitAdapter.getFileList().get(position).getUfdId(), position, OperateType.CLOSE);
+            thread.setThreadToUser(MainActivity.this);
+        }
         super.onDestroy();
-        // TODO: 退出时关掉所有文件
     }
 }

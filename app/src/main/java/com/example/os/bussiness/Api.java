@@ -3,6 +3,7 @@ package com.example.os.bussiness;
 
 import com.example.os.bussiness.bean.BitMapData;
 import com.example.os.bussiness.bean.FileContentResponse;
+import com.example.os.bussiness.bean.FileDirRequest;
 import com.example.os.bussiness.bean.FileResponse;
 import com.example.os.bussiness.bean.SignUpRequestBody;
 import com.example.os.network.response.ApiResponse;
@@ -50,4 +51,10 @@ public interface Api {
 
     @POST("/user/login")
     Call<ApiResponse<Integer>> login(@Body SignUpRequestBody body);
+
+    @POST("/mfd/create")
+    Call<ApiResponse<Integer>> createFileDir(@Body FileDirRequest request);
+
+    @POST("/disk/create_file")
+    Call<ApiResponse<Integer>> createFile(@Body FileDirRequest request);
 }

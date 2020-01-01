@@ -57,4 +57,14 @@ public interface IOSListener {
         void onLoadListener(int id);
     }
 
+    /**
+     * 创建文件目录项
+     */
+    public interface ICreateFileDir extends IOSListener {
+        void onCreateFileDir(int ufdId);
+    }
+
+    public interface ICreateFile extends IOSListener {
+        void onCreateFile(int response);
+    }
 }
