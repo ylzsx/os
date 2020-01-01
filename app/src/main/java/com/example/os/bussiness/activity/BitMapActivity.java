@@ -1,6 +1,5 @@
 package com.example.os.bussiness.activity;
 
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,14 +10,14 @@ import com.example.os.bussiness.IOSListener;
 import com.example.os.bussiness.Repository;
 import com.example.os.bussiness.adapter.BitMapAdapter;
 import com.example.os.bussiness.bean.BitMapData;
+import com.example.os.bussiness.util.GridItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class BitMapActivity extends BaseActivity implements IOSListener.OnGetDiskUseInfoListner {
+public class BitMapActivity extends BaseActivity implements IOSListener.OnGetDiskUseInfoListener {
 
 
     @BindView(R.id.recycler_bitmap_activity)
@@ -58,6 +57,13 @@ public class BitMapActivity extends BaseActivity implements IOSListener.OnGetDis
     private void initAdapter() {
         adapter = new BitMapAdapter(bitMapDatas);
         recyclerBitmapActivity.setAdapter(adapter);
-        recyclerBitmapActivity.setLayoutManager(new GridLayoutManager(getApplicationContext(), 5, LinearLayoutManager.VERTICAL, false));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 4, LinearLayoutManager.VERTICAL, false);
+        GridItemDecoration itemDecoration = new GridItemDecoration.Builder(getApplicationContext())
+                .setHorizontalSpan(R.dimen.vertical_span)
+                .setVerticalSpan(R.dimen.horizontal_span)
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                .build();
+        recyclerBitmapActivity.setLayoutManager(gridLayoutManager);
+        recyclerBitmapActivity.addItemDecoration(itemDecoration);
     }
 }

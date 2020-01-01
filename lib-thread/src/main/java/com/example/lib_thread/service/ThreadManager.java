@@ -2,6 +2,7 @@ package com.example.lib_thread.service;
 
 import com.example.lib_thread.bean.CustomThread;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Map;
 
 public class ThreadManager {
 
-    // 当前运行的线程数量
+
     private int threadNumber;
     // 临时为线程分配的id
     private int threadId;
@@ -35,6 +36,8 @@ public class ThreadManager {
     public void init() {
         threadNumber = 0;
         threadId = 0;
+        threadRunningQueue = new HashMap<>();
+        threadBlockedQueue = new HashMap<>();
     }
 
     public int start() {
@@ -53,5 +56,13 @@ public class ThreadManager {
 
     public Map<Integer, CustomThread> getThreadBlockedQueue() {
         return threadBlockedQueue;
+    }
+
+    public void addThreadRunningQueue(int position, CustomThread thread) {
+        threadRunningQueue.put(position, thread);
+    }
+
+    public void addThreadBlockedQueue(int position, CustomThread thread) {
+        threadBlockedQueue.put(position, thread);
     }
 }

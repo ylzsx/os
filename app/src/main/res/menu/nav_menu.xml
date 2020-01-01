@@ -6,5 +6,7 @@
             android:title="用户管理"/>
         <item android:id="@+id/nav_bitmap"
             android:title="位示图"/>
+        <item android:id="@+id/nav_exit"
+            android:title="退出登陆"/>
     </group>
 </menu>

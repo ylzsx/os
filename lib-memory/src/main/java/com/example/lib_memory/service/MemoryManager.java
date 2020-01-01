@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public class MemoryManager {
 
-    private MemoryBlock memory[];
+    private MemoryBlock[] memory;
 
     private MemoryManager() {}
 
@@ -28,6 +28,9 @@ public class MemoryManager {
 
     public void init() {
         memory = new MemoryBlock[MemoryConstants.MEMORY_BLOCK_TOTAL];
+        for (int i = 0; i < MemoryConstants.MEMORY_BLOCK_TOTAL; i++) {
+            memory[i] = new MemoryBlock();
+        }
     }
 
     /**
