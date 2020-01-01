@@ -15,5 +15,12 @@
     <color name="moon_yellow">#ffff4d</color>
     <color name="deep_green">#22c32e</color>
 
+
     <color name="lightPink">#FFB6C1</color>
+
+    <color name="deep_pink">#ef2f3e</color>
+    <color name="light_blue">#1fd3ff</color>
+
+    <color name="half_translate">#80FFFFFF</color>
+
 </resources>

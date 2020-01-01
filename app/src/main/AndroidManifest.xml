@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".bussiness.activity.PasswordActivity"></activity>
+        <activity android:name=".bussiness.activity.MemoryInfoActivity"></activity>
+        <activity android:name=".bussiness.activity.PasswordActivity" />
         <activity android:name=".bussiness.activity.BitMapActivity" />
         <activity android:name=".bussiness.activity.MainActivity" />
         <activity android:name=".bussiness.activity.LoginActivity">

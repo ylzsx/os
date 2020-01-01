@@ -72,9 +72,13 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
                         break;
                     case R.id.nav_exit:
                         App.getInstance().removeAllActivity();
+                        CacheUtil.clear();
                         Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(intent1);
                         break;
+                    case R.id.nav_memory:
+                        Intent intent2 = new Intent(MainActivity.this, MemoryInfoActivity.class);
+                        startActivity(intent2);
                     default:
                         break;
                 }
