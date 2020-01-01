@@ -1,11 +1,13 @@
 package com.example.os.bussiness;
 
+import com.example.os.bussiness.bean.BitMapData;
 import com.example.os.bussiness.bean.FileResponse;
 import com.example.os.network.NetworkFactory;
 import com.example.os.network.response.ApiResponse;
 import com.example.os.network.response.ResponseCallBack;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -55,6 +57,16 @@ public class Repository {
             @Override
             protected void onDataResponse(Call<ApiResponse<Integer>> call, ApiResponse<Integer> responseData) {
                 listener.onOpenFileListener(responseData.getData());
+            }
+        });
+    }
+
+
+    public void getDiskUseInfo(IOSListener.OnGetDiskUseInfoListner listner) {
+        mApi.getDiskUseInfo().enqueue(new ResponseCallBack<List<BitMapData>>() {
+            @Override
+            protected void onDataResponse(Call<ApiResponse<List<BitMapData>>> call, ApiResponse<List<BitMapData>> responseData) {
+                listner.onGetDiskUseInfo(responseData.getData());
             }
         });
     }

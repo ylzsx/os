@@ -1,10 +1,12 @@
 package com.example.os.bussiness;
 
 
+import com.example.os.bussiness.bean.BitMapData;
 import com.example.os.bussiness.bean.FileResponse;
 import com.example.os.network.response.ApiResponse;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -22,7 +24,9 @@ public interface Api {
     @GET("/mfd/search/{mfdId}")
     Call<ApiResponse<ArrayList<FileResponse>>> getAllFileByMFDId(@Path("mfdId") int mfdId);
 
-
     @GET("/mfd/open_file")
     Call<ApiResponse<Integer>> openFile(@Query("ufdId") int ufdId);
+
+    @GET("/disk/show_bitmap")
+    Call<ApiResponse<List<BitMapData>>> getDiskUseInfo();
 }

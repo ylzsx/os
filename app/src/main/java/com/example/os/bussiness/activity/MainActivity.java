@@ -1,9 +1,13 @@
 package com.example.os.bussiness.activity;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.example.os.R;
 import com.example.os.base.BaseActivity;
@@ -38,6 +42,24 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
         mRecyclerView.setAdapter(mFruitAdapter);
         mProgressDialog.show();
 
+        mNavView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_user_management:
+                        break;
+                    case R.id.nav_bitmap:
+                        Intent intent = new Intent(MainActivity.this, BitMapActivity.class);
+                        startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        });
         mFruitAdapter.setItemCloseFileListener(new FruitAdapter.ItemCloseFileListener() {
             @Override
             public void onItemCloseFileListener(int position) {

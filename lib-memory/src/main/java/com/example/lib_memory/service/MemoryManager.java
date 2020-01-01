@@ -33,8 +33,8 @@ public class MemoryManager {
     /**
      * 内存分配
      * @param threadId
-     * @return  分配到的内存首地址
-     * TODO：之后若写进程也需要占用内存，则需要增加一个分配部分内存的方法
+     * @return
+     *
      */
     public ArrayList<Integer> malloc(int threadId) {
         ArrayList<Integer> result = new ArrayList<>();
@@ -57,7 +57,7 @@ public class MemoryManager {
      * @param content   要置换的内容
      */
     public boolean LRU(int threadId, ArrayList<Integer> memoryBlocks, String content) {
-        // 获取到将要被替换的内存块号
+
         int maxTime = -1;
         int replacedMemoryBlock = -1;
         for (Integer memoryBlock : memoryBlocks) {

@@ -1,5 +1,6 @@
 package com.example.os.bussiness;
 
+import com.example.os.bussiness.bean.BitMapData;
 import com.example.os.bussiness.bean.FileResponse;
 
 import java.util.List;
@@ -22,4 +23,9 @@ public interface IOSListener {
     public interface IOpenFileListener extends IOSListener {
         void onOpenFileListener(int response);
     }
+
+    public interface OnGetDiskUseInfoListner extends IOSListener {
+        void onGetDiskUseInfo(List<BitMapData> bitMapDataList);
+    }
+
 }

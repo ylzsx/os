@@ -7,4 +7,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="grey">#EEEEEE</color>
+
+    <color name="moon_yellow">#ffff4d</color>
+    <color name="deep_green">#22c32e</color>
 </resources>
