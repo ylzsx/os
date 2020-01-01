@@ -14,6 +14,8 @@ import com.example.os.base.BaseActivity;
 import com.example.os.bussiness.IOSListener;
 import com.example.os.bussiness.Repository;
 import com.example.os.bussiness.bean.OpenTypeBean;
+import com.example.os.common.CacheKey;
+import com.example.os.utils.CacheUtil;
 import com.example.os.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -33,6 +35,12 @@ public class LoginActivity extends BaseActivity implements IOSListener.OnIdentif
 
     @Override
     protected void initView() {
+
+        if (CacheUtil.getSP().contains(CacheKey.MFDId)) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+
         mRelativeLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
