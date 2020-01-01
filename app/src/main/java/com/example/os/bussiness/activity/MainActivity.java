@@ -1,13 +1,17 @@
 package com.example.os.bussiness.activity;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.example.lib_thread.bean.CustomThread;
 import com.example.lib_thread.service.ThreadManager;
+import com.example.os.App;
 import com.example.os.R;
 import com.example.os.base.BaseActivity;
 import com.example.os.bussiness.IOSListener;
@@ -15,8 +19,10 @@ import com.example.os.bussiness.Repository;
 import com.example.os.bussiness.adapter.FruitAdapter;
 import com.example.os.bussiness.bean.FileResponse;
 import com.example.os.bussiness.bean.OperateType;
+import com.example.os.common.CacheKey;
 import com.example.os.thread.ExecuteThread;
 import com.example.os.thread.IThreadToUser;
+import com.example.os.utils.CacheUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +55,34 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
         mRecyclerView.setAdapter(mFruitAdapter);
         mProgressDialog.show();
 
-        // 关闭文件
-        mFruitAdapter.setItemCloseFileListener(new FruitAdapter.ItemCloseFileListener() {
+        mNavView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onItemCloseFileListener(int position) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_user_management:
+                        break;
+                    case R.id.nav_bitmap:
+                        Intent intent = new Intent(MainActivity.this, BitMapActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.nav_exit:
+                        App.getInstance().removeAllActivity();
+                        Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent1);
+                        break;
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        });
+
+        // 关闭文件
+        mFruitAdapter.setItemDeleteFileListener(new FruitAdapter.ItemDeleteFileListener() {
+            @Override
+            public void onItemDeleteFileListener(int position) {
 
             }
         });
@@ -85,7 +115,8 @@ public class MainActivity extends BaseActivity implements IOSListener.IGetAllFil
 
     @Override
     protected void initData() {
-        Repository.getInstance().getAllFile(2, this);
+        int mfdId = CacheUtil.getSP().getInt(CacheKey.MFDId, 1);
+        Repository.getInstance().getAllFile(mfdId, this);
     }
 
     @Override

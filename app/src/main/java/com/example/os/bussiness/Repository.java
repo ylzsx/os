@@ -1,12 +1,16 @@
 package com.example.os.bussiness;
 
+
+import com.example.os.bussiness.bean.BitMapData;
 import com.example.os.bussiness.bean.FileContentResponse;
 import com.example.os.bussiness.bean.FileResponse;
+import com.example.os.bussiness.bean.SignUpRequestBody;
 import com.example.os.network.NetworkFactory;
 import com.example.os.network.response.ApiResponse;
 import com.example.os.network.response.ResponseCallBack;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -60,6 +64,7 @@ public class Repository {
         });
     }
 
+
     public void searchFile(int ufdId, int page, final IOSListener.ISearchFileListener listener) {
         mApi.searchFile(ufdId, page).enqueue(new ResponseCallBack<ArrayList<FileContentResponse>>() {
             @Override
@@ -69,6 +74,44 @@ public class Repository {
         });
     }
 
+    /**
+     * 获取磁盘位示图
+     * @param listener
+     */
+    public void getDiskUseInfo(IOSListener.OnGetDiskUseInfoListener listener) {
+        mApi.getDiskUseInfo().enqueue(new ResponseCallBack<List<BitMapData>>() {
+            @Override
+            protected void onDataResponse(Call<ApiResponse<List<BitMapData>>> call, ApiResponse<List<BitMapData>> responseData) {
+                listener.onGetDiskUseInfo(responseData.getData());
+            }
+        });
+    }
+
+
+    public void identifyUser(IOSListener.OnIdentifyUserListener listener, String userName) {
+        mApi.identifyUser(userName).enqueue(new ResponseCallBack<Integer>() {
+            @Override
+            protected void onDataResponse(Call<ApiResponse<Integer>> call, ApiResponse<Integer> responseData) {
+                listener.onIdentifyUser(responseData.getData());
+            }
+        });
+    }
+
+    /**
+     * 创建新用户
+     * @param loadListener
+     * @param body
+     */
+    public void createUser(IOSListener.LoadListener loadListener, SignUpRequestBody body) {
+        mApi.createUser(body).enqueue(new ResponseCallBack<Integer>() {
+            @Override
+            protected void onDataResponse(Call<ApiResponse<Integer>> call, ApiResponse<Integer> responseData) {
+                loadListener.onLoadListener(responseData.getData());
+            }
+        });
+    }
+
+
     public void closeFile(int ufdId, final IOSListener.ICloseFileListener listener) {
         mApi.closeFile(ufdId).enqueue(new ResponseCallBack<Integer>() {
             @Override
@@ -77,5 +120,20 @@ public class Repository {
             }
         });
     }
+
+    /**
+     * 登陆
+     * @param loadListener
+     * @param body
+     */
+    public void login(IOSListener.LoadListener loadListener, SignUpRequestBody body) {
+        mApi.login(body).enqueue(new ResponseCallBack<Integer>() {
+            @Override
+            protected void onDataResponse(Call<ApiResponse<Integer>> call, ApiResponse<Integer> responseData) {
+                loadListener.onLoadListener(responseData.getData());
+            }
+        });
+    }
+
 
 }

@@ -36,7 +36,7 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
     private List<FileResponse> mFileList;
 
     private ItemOpenFileListener mItemOpenFileListener;
-    private ItemCloseFileListener mItemCloseFileListener;
+    private ItemDeleteFileListener mItemDeleteFileListener;
     private ItemNextListener mItemNextListener;
 
     public FruitAdapter(Context context, List<FileResponse> fileList) {
@@ -83,7 +83,7 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
         viewHolder.mBtnDeleteFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mItemCloseFileListener.onItemCloseFileListener(i);
+                mItemDeleteFileListener.onItemDeleteFileListener(i);
             }
         });
 
@@ -207,12 +207,12 @@ public class FruitAdapter extends RecyclerView.Adapter<FruitAdapter.ViewHolder> 
         mItemOpenFileListener = itemOpenFileListener;
     }
 
-    public interface ItemCloseFileListener {
-        void onItemCloseFileListener(int position);
+    public interface ItemDeleteFileListener {
+        void onItemDeleteFileListener(int position);
     }
 
-    public void setItemCloseFileListener(ItemCloseFileListener itemCloseFileListener) {
-        mItemCloseFileListener = itemCloseFileListener;
+    public void setItemDeleteFileListener(ItemDeleteFileListener itemDeleteFileListener) {
+        mItemDeleteFileListener = itemDeleteFileListener;
     }
 
     public interface ItemNextListener {

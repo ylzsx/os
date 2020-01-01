@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class ThreadManager {
 
-    // 当前运行的线程数量
+
     private int threadNumber;
     // 临时为线程分配的id
     private int threadId;
